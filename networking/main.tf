@@ -87,7 +87,7 @@ resource "aws_eip" "name" {
     }
   
 }
-resource "aws_route_table" "name-1" {
+resource "aws_route_table" "private" {
     vpc_id = aws_vpc.name.id
     route {
         cidr_block = "0.0.0.0/0"
@@ -99,14 +99,12 @@ resource "aws_route_table" "name-1" {
         Name = "PrivateRouteTable"
     }
 }
-resource "aws_route_table_association" "name-4" {
-        subnet_id = aws_subnet.name-3.id
-        route_table_id = aws_route_table.name-1.id
+resource "aws_route_table_association" "private" {
+  for_each = {
+    subnet3 = aws_subnet.name-3.id
+    subnet4 = aws_subnet.name-4.id
+  }
 
-  
-}
-resource "aws_route_table_association" "name-5" {
-        subnet_id = aws_subnet.name-4.id
-        route_table_id = aws_route_table.name-1.id
-  
+  subnet_id      = each.value
+  route_table_id = aws_route_table.private.id
 }
