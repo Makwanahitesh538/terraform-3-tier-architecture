@@ -60,18 +60,18 @@ resource "aws_subnet" "name-4" {
             Name = "Subnet4-public"
         }
 }
-resource "aws_route_table_association" "name-1" {
-        subnet_id = aws_subnet.name-1.id
-        route_table_id = aws_route_table.name.id
+resource "aws_route_table_association" "public" {
+  for_each = {
+    subnet1 = aws_subnet.name-1.id
+    subnet2 = aws_subnet.name-2.id
+  }
+
+  subnet_id      = each.value
+  route_table_id = aws_route_table.name.id
+}
 
       
-}
-resource "aws_route_table_association" "name-2" {
-        subnet_id = aws_subnet.name-2.id
-        route_table_id = aws_route_table.name.id
 
-      
-}
 resource "aws_nat_gateway" "name" {
     allocation_id = aws_eip.name.id
     subnet_id = aws_subnet.name-1.id
